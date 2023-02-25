@@ -1,0 +1,5 @@
+E:\.Net_projects\BOOK_STORE\obj\Debug\netcoreapp2.1\BOOK_STORE.csproj.AssemblyReference.cache
+E:\.Net_projects\BOOK_STORE\obj\Debug\netcoreapp2.1\BOOK_STORE.GeneratedMSBuildEditorConfig.editorconfig
+E:\.Net_projects\BOOK_STORE\obj\Debug\netcoreapp2.1\BOOK_STORE.AssemblyInfoInputs.cache
+E:\.Net_projects\BOOK_STORE\obj\Debug\netcoreapp2.1\BOOK_STORE.AssemblyInfo.cs
+E:\.Net_projects\BOOK_STORE\obj\Debug\netcoreapp2.1\BOOK_STORE.csproj.CoreCompileInputs.cache
