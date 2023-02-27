@@ -1,4 +1,4 @@
-using BOOK_STORE.Models;
+﻿using BOOK_STORE.Models;
 using BOOK_STORE.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,8 +29,8 @@ namespace BOOK_STORE
         {
 
            // services.AddMvc();
-            services.AddSingleton<IBookStoreRepository<Author>, AuthorRepository>();
-            services.AddSingleton<IBookStoreRepository<Book>, BookRepository>();
+            services.AddScoped<IBookStoreRepository<Author>, AuthorDbRepository>();
+            services.AddScoped<IBookStoreRepository<Book>, BookDbRepository>();
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddDbContext<BookstoreDbcontext>(options =>
             {
@@ -48,6 +48,10 @@ namespace BOOK_STORE
             }
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
+            //app.UseMvc(route =>
+            //{
+            //    route.MapRoute("default", "{Controller =Book}/{action = Index}/{id ?}");
+            //});
 
         }
     }

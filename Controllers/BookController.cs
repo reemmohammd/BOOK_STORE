@@ -4,6 +4,7 @@ using BOOK_STORE.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,14 +59,8 @@ namespace BOOK_STORE.Controllers
             {
                 try
                 {
-                    string FileName = string.Empty;
-                    if (model.File!= null) 
-                    {
-                        string uploads = Path.Combine(hosting.WebRootPath, "uploads");
-                        FileName = model.File.FileName;
-                        string fullpath =Path.Combine(uploads,FileName);    
-                        model.File.CopyTo(new FileStream(fullpath, FileMode.Create));
-                    }
+                    string FileName = UploadFile(model.File) ?? string.Empty;
+                 
                     if (model.AuthorId == -1)
                     {
                         ViewBag.Message = "please select an author from the list";
@@ -121,23 +116,8 @@ namespace BOOK_STORE.Controllers
             try
             {
                 // لحفظ مسار الصورة
-                string FileName = string.Empty;
-                if (viewModel.File != null)
-                {
-                    string uploads = Path.Combine(hosting.WebRootPath, "uploads");
-                    FileName = viewModel.File.FileName;
-                    string fullpath = Path.Combine(uploads, FileName);
-                    //delete the old file
-                    string oldfilename = bookRepository.find(viewModel.BookId).ImageUrl;
-                    string fulloldname = Path.Combine(uploads, oldfilename);
-                    if (fullpath != fulloldname)
-                    {
-                        System.IO.File.Delete(fulloldname);
-                        // save the new file
-                        viewModel.File.CopyTo(new FileStream(fullpath, FileMode.Create));
-                    }
-                  
-                }
+                string FileName = UploadFile(viewModel.File,viewModel.ImageUrl);
+             
                 var author = authorRepository.find(viewModel.AuthorId);
                 Book book = new Book
                 {
@@ -150,7 +130,7 @@ namespace BOOK_STORE.Controllers
                 bookRepository.update(viewModel.BookId,book);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -192,6 +172,37 @@ namespace BOOK_STORE.Controllers
                 Authors = FillSelectList()
             };
             return vmodel;
+        }
+        string UploadFile(IFormFile file)
+        {
+            if (file != null)
+            {
+                string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                string fullpath = Path.Combine(uploads,file. FileName);
+                file.CopyTo(new FileStream(fullpath, FileMode.Create));
+                return file.FileName;
+            }
+            return null;
+        }
+        string UploadFile(IFormFile file, string ImageUrl)
+        {
+            if (file != null)
+            {
+                string uploads = Path.Combine(hosting.WebRootPath, "uploads");
+                string newpath = Path.Combine(uploads, file.FileName);
+                //delete the old file
+                string oldpath = Path.Combine(uploads, ImageUrl);
+                if (oldpath != newpath)
+                {
+                    System.IO.File.Delete(oldpath);
+                    // save the new file
+                    file.CopyTo(new FileStream(newpath, FileMode.Create));
+                }
+
+                return file.FileName;
+
+            }
+            return ImageUrl;
         }
     }
 }
